@@ -1,0 +1,16 @@
+{
+  "name": "Doll Bot",
+  "version": "0.0.1",
+  "description": "Dollbot ?",
+  "main": "dollbot.js",
+  "author": {
+    "name": "DollRanger"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "discord.js": "^11.4.2",
+    "puppeteer": "^1.10.0",
+    "remove-accents": "^0.4.2",
+    "request": "^2.88.0"
+  }
+}
