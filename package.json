@@ -1,10 +1,13 @@
 {
-  "name": "Doll Bot",
+  "name": "DollBot",
   "version": "0.0.1",
   "description": "Dollbot ?",
   "main": "dollbot.js",
   "author": {
     "name": "DollRanger"
+  },
+  "scripts": {
+    "start": "node ./dollbot.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
