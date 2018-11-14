@@ -184,9 +184,9 @@ client.on("message", async message => {
             // This command must be limited to mods and admins. In this example we just hardcode the role names.
             // Please read on Array.some() to understand this bit: 
             // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
-            if (!message.member.permissions.has("ADMINISTRATOR")) {
-                return message.reply(lang.noperm);
-            }
+            //if (!message.member.permissions.has("ADMINISTRATOR")) {
+            //    return message.reply(lang.noperm);
+            //}
 
             // Adding a scope here to prevent naming conflicts with %add
             {
@@ -284,9 +284,9 @@ client.on("message", async message => {
             // This command must be limited to mods and admins. In this example we just hardcode the role names.
             // Please read on Array.some() to understand this bit: 
             // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
-            if (!message.member.permissions.has("ADMINISTRATOR")) {
-                return message.reply(lang.noperm);
-            }
+            //if (!message.member.permissions.has("ADMINISTRATOR")) {
+            //    return message.reply(lang.noperm);
+            //}
             let commandSearchBan = require(`./database/isban.js`);
 
             // Those nasty users should not prompt empty searches
@@ -305,6 +305,11 @@ client.on("message", async message => {
             // Who is the best?
             message.channel.send('DollRanger / [GS]Doll,' + lang.fershure);
             break;
+			
+		case 'thanks':
+		case 'obg':
+			message.channel.send('[GS]Doll, Adamont' + lang.fershure);
+            break;
 
         case 'add':
             // Validate input against JSON array and emit a result or an error
@@ -314,7 +319,7 @@ client.on("message", async message => {
                 return;
             }
             const item = args.join(' ').toLowerCase();
-            if (!validItems.includes(item)) {
+            if (!validItems.join('+|+').toLowerCase().split('+|+').includes(item)) {
                 message.channel.send('Invalid item');
                 break;
             }
@@ -350,6 +355,56 @@ client.on("message", async message => {
                 message.channel.send('Wiped submissions');
             });
             break;
+		
+		case 'sorteia':
+		
+			var msglen = 50
+			
+			if (args.length >= 1) {
+				msglen = args
+				if (args > 100) {
+					message.channel.send('Não vacila, eu vou levar um ano...');
+				}
+            }
+			
+			var names = []
+			var ids = []
+			
+			const messages = await message.channel.fetchMessages({
+				limit: 100,
+				});
+			
+			var previousMessages = messages;
+			
+			var iterations = 0;
+			
+			message.channel.send('Working on it, please wait');
+			
+			do{
+				previousMessages = await message.channel.fetchMessages({
+					limit: 100,
+					before: previousMessages.last().id,
+				});
+				messages.concat(previousMessages);
+				iterations = iterations + 1;
+				
+			}while((previousMessages && previousMessages.size == 100) && iterations < msglen)
+
+			const nonBotMessages = messages.filter(message => !message.author.bot);
+			
+			nonBotMessages.forEach(function(mesg){
+				
+				if (ids.indexOf(mesg.author.id) === -1) {
+					ids.push(mesg.author.id);
+				}
+				if (names.indexOf(mesg.author.username) === -1) {
+					names.push(mesg.author.username);
+				}
+			});
+			
+			//message.channel.send(names[Math.floor(Math.random() * names.length)] + ' is the winner!') 
+			message.channel.send('<@' + ids[Math.floor(Math.random() * ids.length)] + '> is the winner!') 
+			
     }
 });
 
