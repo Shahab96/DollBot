@@ -1,6 +1,8 @@
 ﻿// Required discord packages
 const Discord = require('discord.js');
 
+const fs = require('fs');
+
 // Here we load the config.json file that contains our token and our prefix values. 
 const config = require("./auth.json");
 // config.token contains the bot's token
@@ -11,14 +13,14 @@ const datas = require("./infos.json");
 
 var lang = null;
 
-switch(datas.lang) {
-	default:
-	case 'pt-br':
-		lang = require("./lang/ptbr.json");
-		break;
-	case 'en-us':
-		lang = require("./lang/enus.json");
-		break;
+switch (datas.lang) {
+    default:
+    case 'pt-br':
+        lang = require("./lang/ptbr.json");
+        break;
+    case 'en-us':
+        lang = require("./lang/enus.json");
+        break;
 }
 
 // This is your client. Some people call it `bot`, some people call it `self`, 
@@ -79,7 +81,7 @@ client.on("ready", () => {
     // Example of changing the bot's playing game to something useful. `client.user` is what the
     // docs refer to as the "ClientUser".
     //client.user.setActivity(`Serving ${client.guilds.size} servers`);
-	client.user.setActivity(lang.iluminati);
+    client.user.setActivity(lang.iluminati);
 });
 
 client.on("guildCreate", guild => {
@@ -109,7 +111,7 @@ client.on("message", async message => {
     const cmd = args.shift().toLowerCase();
 
     switch (cmd) {
-		case 'ajuda':
+        case 'ajuda':
         case 'help':
             var helpMsg = '```';
             helpMsg = helpMsg + config.prefix + 'ping - Calculates ping between sending a message and editing it, giving a nice round-trip latency.\n';
@@ -124,32 +126,32 @@ client.on("message", async message => {
             helpMsg = helpMsg + config.prefix + 'alpacu - ( ͡° ͜ʖ ͡°)\n';
             helpMsg = helpMsg + config.prefix + 'search <query> - Searches in GF database pt the query, then return the first 5 hits. (needs improvements!!!)\n';
             helpMsg = helpMsg + config.prefix + 'isban <query> - Check whether a player is banned or not.\n';
-			helpMsg = helpMsg + config.prefix + 'count - Its beta, do not use it.';
+            helpMsg = helpMsg + config.prefix + 'count - Its beta, do not use it.';
             helpMsg = helpMsg + '```';
             message.channel.send(helpMsg);
             break;
 
-		case 'convitebot':
+        case 'convitebot':
         case 'invitelink':
             // Aw god... this is self explanatory, if you don't understand it, don't mess my code!!!!!
             message.channel.send(datas.inviteLink);
             break;
-		
+
         case 'ping':
             // Calculates ping between sending a message and editing it, giving a nice round-trip latency.
             // The second ping is an average latency between the bot and the websocket server (one-way, not round-trip)
             const m = await message.channel.send("Ping?");
-			m.edit(lang.pong + (m.createdTimestamp - message.createdTimestamp) + lang.api + Math.round(client.ping) + `ms`);
+            m.edit(lang.pong + (m.createdTimestamp - message.createdTimestamp) + lang.api + Math.round(client.ping) + `ms`);
             break;
-		
-		case 'busca':
+
+        case 'busca':
         case 'search':
             // Searches in GF database for input query
             let commandSearchReq = require(`./database/search.js`);
 
             // Those nasty users should not prompt empty searches
             if (args.length === 0) {
-				message.channel.send(lang.nofool);
+                message.channel.send(lang.nofool);
                 break;
             }
 
@@ -157,7 +159,7 @@ client.on("message", async message => {
             commandSearchReq.searchGFDB(args.join(' '), message);
             break;
 
-		case 'fale':
+        case 'fale':
         case 'say':
             // makes the bot say something and delete the message. As an example, it's open to anyone to use. 
             // To get the "message" itself we join the `args` back into a string with spaces: 
@@ -177,18 +179,29 @@ client.on("message", async message => {
             });
             break;
 
-		case 'contar':
+        case 'contar':
         case 'count':
-			// This command must be limited to mods and admins. In this example we just hardcode the role names.
+            // This command must be limited to mods and admins. In this example we just hardcode the role names.
             // Please read on Array.some() to understand this bit: 
             // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
             if (!message.member.permissions.has("ADMINISTRATOR")) {
-				return message.reply(lang.noperm);
+                return message.reply(lang.noperm);
             }
-			
-			return message.reply(lang.grr);
-            
-			//const collector = new Discord.MessageCollector(channel);
+
+            // Adding a scope here to prevent naming conflicts with %add
+            {
+                const submissions = require('./submissions.json');
+                const embed = new Discord.RichEmbed()
+                    .setTitle('Counts');
+                submissions.forEach((submission) => {
+                    embed.addField(submission.Name, submission.Count);
+                });
+                message.channel.send({ embed });
+            }
+
+            // return message.reply(lang.grr);
+
+            //const collector = new Discord.MessageCollector(channel);
             //console.log(collector);
             break;
 
@@ -198,7 +211,7 @@ client.on("message", async message => {
             // Please read on Array.some() to understand this bit: 
             // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
             if (!message.member.permissions.has("ADMINISTRATOR")) {
-				return message.reply(lang.noperm);
+                return message.reply(lang.noperm);
             }
 
             // Let's first check if we have a member and if we can kick them!
@@ -212,45 +225,45 @@ client.on("message", async message => {
 
             // Check if there is any reason, if not, provide the string "No reason provided"
             if (!reason) {
-				reason = lang.noreason
+                reason = lang.noreason
             }
 
             // Check if member exists
             if (!member) {
                 //return message.reply("Please mention a valid member of this server.");
-				return message.reply(lang.givevalidmember);
+                return message.reply(lang.givevalidmember);
             }
 
             // This diferentiates between kick and ban
             if (cmd === "kick") {
                 // Check if the member is able to be kicked
                 if (!member.kickable) {
-					return message.reply(lang.cantkick);
+                    return message.reply(lang.cantkick);
                 }
 
                 // Now, time for a swift kick in the nuts!
-				await member.kick(reason).catch(error => message.reply(lang.sorry + message.author + lang.nokickerr + error));
+                await member.kick(reason).catch(error => message.reply(lang.sorry + message.author + lang.nokickerr + error));
                 message.reply(member.user.tag + lang.kickby + message.author.tag + lang.punfor + reason);
 
             } else {
                 // Check if the member is able to be banned
                 if (!member.bannable) {
-					return message.reply(lang.cantbean);
+                    return message.reply(lang.cantbean);
                 }
                 // BANHAMMER
-				await member.kick(reason).catch(error => message.reply(lang.sorry + message.author + lang.nobeanerr + error));
+                await member.kick(reason).catch(error => message.reply(lang.sorry + message.author + lang.nobeanerr + error));
                 message.reply(member.user.tag + lang.beanby + message.author.tag + lang.punfor + reason);
             }
 
             break;
 
-		case 'expurgar':
+        case 'expurgar':
         case 'purge':
-			// This command must be limited to mods and admins. In this example we just hardcode the role names.
+            // This command must be limited to mods and admins. In this example we just hardcode the role names.
             // Please read on Array.some() to understand this bit: 
             // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
             if (!message.member.permissions.has("ADMINISTRATOR")) {
-				return message.reply(lang.noperm);
+                return message.reply(lang.noperm);
             }
             // This command removes all messages from all users in the channel, up to 100.
 
@@ -259,26 +272,26 @@ client.on("message", async message => {
 
             // Ooooh nice, combined conditions. <3
             if (!deleteCount || deleteCount < 2 || deleteCount > 100) {
-				return message.reply(lang.givnum);
+                return message.reply(lang.givnum);
             }
 
             // So we get our messages, and delete them. Simple enough, right?
             const fetched = await message.channel.fetchMessages({ limit: (deleteCount + 1) });
-			message.channel.bulkDelete(fetched).catch(error => message.reply(lang.nodel + error));
+            message.channel.bulkDelete(fetched).catch(error => message.reply(lang.nodel + error));
             break;
-		case 'tabanido':
+        case 'tabanido':
         case 'isban':
-			// This command must be limited to mods and admins. In this example we just hardcode the role names.
+            // This command must be limited to mods and admins. In this example we just hardcode the role names.
             // Please read on Array.some() to understand this bit: 
             // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
             if (!message.member.permissions.has("ADMINISTRATOR")) {
-				return message.reply(lang.noperm);
+                return message.reply(lang.noperm);
             }
-			let commandSearchBan = require(`./database/isban.js`);
-			
+            let commandSearchBan = require(`./database/isban.js`);
+
             // Those nasty users should not prompt empty searches
             if (args.length === 0) {
-				message.channel.send(lang.nofool);
+                message.channel.send(lang.nofool);
                 break;
             }
 
@@ -290,7 +303,52 @@ client.on("message", async message => {
         case 'whosdabest':
         case 'whosdebest':
             // Who is the best?
-			message.channel.send('DollRanger / [GS]Doll,' + lang.fershure);
+            message.channel.send('DollRanger / [GS]Doll,' + lang.fershure);
+            break;
+
+        case 'add':
+            // Validate input against JSON array and emit a result or an error
+            const validItems = require('./validItems.json');
+            if (args.length < 1) {
+                message.channel.send('You didn\'t supply an item');
+                return;
+            }
+            const item = args.join(' ').toLowerCase();
+            if (!validItems.includes(item)) {
+                message.channel.send('Invalid item');
+                break;
+            }
+
+            // Adding a scope here to prevent naming conflicts with %count
+            {
+                const submissions = require('./submissions.json');
+                const submittedItem = submissions.find(sub => sub.Name === item);
+                if (!submittedItem) {
+                    submissions.push({
+                        Name: item,
+                        Count: 1,
+                    });
+                } else {
+                    submittedItem.Count++;
+                }
+                fs.writeFile('./submissions.json', JSON.stringify(submissions), (err, res) => {
+                    if (err) {
+                        console.error(err);
+                        return;
+                    }
+                    message.channel.send(`Logged ${item}`)
+                });
+            }
+            break;
+
+        case 'wipe':
+            fs.writeFile('./submissions.json', '[]', (err, res) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                message.channel.send('Wiped submissions');
+            });
             break;
     }
 });
