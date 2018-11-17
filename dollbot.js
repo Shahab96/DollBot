@@ -144,6 +144,7 @@ client.on("message", async message => {
 			helpMsg = helpMsg + '۞ ' + config.prefix + 'whosdabest - Quem é o melhor?\n';
             helpMsg = helpMsg + '۞ ' + config.prefix + 'alpacu - ( ͡° ͜ʖ ͡°)\n';
 			helpMsg = helpMsg + '۞ ' + config.prefix + 'tabanido <nome da conta> - Checa se um jogador está banido no GF-PT. (Apenas admin)\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'talentcombo <classe> - Retorna o combo de talentos da classe pedida.\n';
             helpMsg = helpMsg + '```';
             message.channel.send(helpMsg);
             break;
@@ -202,7 +203,7 @@ client.on("message", async message => {
             // Then we delete the command message (sneaky, right?). The catch just ignores the error with a cute smiley thing.
             message.delete().catch(O_o => { });
 			
-			const channel = client.channels.find('name', 'bar_do_babama');
+			const channel = client.channels.find(x => x.name === 'bar_do_babama');
 			channel.send(sayMessage2);
             break;
 
@@ -322,7 +323,7 @@ client.on("message", async message => {
 			
 		case 'thanks':
 		case 'obg':
-			message.channel.send('[GS]Doll, Adamont' + lang.fershure);
+			message.channel.send('[GS]Doll, Adamont, [GS]Ready' + lang.fershure);
             break;
 
         case 'add':
@@ -490,6 +491,25 @@ client.on("message", async message => {
 				// Search the title from NAME
 				commandsearchquest.searchquest(args.join(' '), message);
 			}
+			break;
+		
+		case 'talentcombo':
+		case 'combodetalento':
+			// Those nasty users should not prompt empty searches
+            if (args.length === 0) {
+                message.channel.send(lang.nofool);
+                break;
+            }
+			let commandtalentcombo = require(`./database/talentcombo.js`);
+			
+			commandtalentcombo.talentcombo(args.join(' '), message);
+			
+			break;
+		
+		case 'teste':
+			let commandalchemy = require(`./database/alchemy.js`);
+			
+			commandalchemy.buildalch(message);
 			break;
     }
 });

@@ -66,6 +66,4 @@ var searchquest = async function searchquest(rawQuery, message) {
 	}
 	
   return;
-	
-  return;
 }

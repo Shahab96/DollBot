@@ -20,7 +20,6 @@ switch(datas.lang) {
 }
 
 exports.searchGFDB = (rawQuery, message) => {
-
 //function searchGFDB(rawQuery, message) {
     // Remove accents from query
     query = accents.remove(rawQuery);
