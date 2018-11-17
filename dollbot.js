@@ -54,7 +54,7 @@ client.on("ready", () => {
     var chanlen = client.channels.size;
     var guildlen = client.guilds.size;
 
-    size = Math.max(clientlen, chanlen, guildlen, 7) + 19
+    /*size = Math.max(clientlen, chanlen, guildlen, 7) + 19
 
     toPrint = toPrint + `\n\t ╔` + new Array(size).join('═') + `╗`;
     var endPrint = `\n\t ╚` + new Array(size).join('═') + `╝`;
@@ -72,7 +72,7 @@ client.on("ready", () => {
     toPrint = toPrint + endPrint;
 
 
-    console.log(`${toPrint}`);
+    console.log(`${toPrint}`);*/
 
     console.log(`\t   ╔═══════════════════════════════╗`)
     console.log(`\t   ║ ♥♥♥ DollRanger is so COOL ♥♥♥ ║`)
@@ -98,7 +98,9 @@ client.on("guildDelete", guild => {
 
 client.on("message", async message => {
     // This event will run on every single message received, from any channel or DM.
-
+	
+	// This command must be limited to mods and admins. In this example we just hardcode the role names.
+	
     // It's good practice to ignore other bots. This also makes your bot ignore itself
     // and not get into a spam loop (we call that "botception").
     if (message.author.bot) return;
@@ -106,20 +108,21 @@ client.on("message", async message => {
     // Also good practice to ignore any message that does not start with our prefix, 
     // which is set in the configuration file.
     if (message.content.indexOf(config.prefix) !== 0) return;
-
-    const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+	
+	const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
     const cmd = args.shift().toLowerCase();
 
     switch (cmd) {
         case 'ajuda':
         case 'help':
-            var helpMsg = '```';
-            helpMsg = helpMsg + config.prefix + 'ping - Calculates ping between sending a message and editing it, giving a nice round-trip latency.\n';
+            var helpMsg = '```\n';
+            /*
+			helpMsg = helpMsg + config.prefix + 'ping - Calculates ping between sending a message and editing it, giving a nice round-trip latency.\n';
             helpMsg = helpMsg + config.prefix + 'say <phrase to be said> - Makes the bot say something and delete the message.\n';
             helpMsg = helpMsg + config.prefix + 'kick \@victm <reason (optional)> - Kicks a victm, then you may provide a reason why. (Only those whose have admin permissions are able to do it!)\n';
             helpMsg = helpMsg + config.prefix + 'ban \@victm <reason (optional)> - Bans a victm, then you may provide a reason why. (Only those whose have admin permissions are able to do it!)\n';
             helpMsg = helpMsg + config.prefix + 'invitelink - link to invite ' + datas.name + ' to servers.\n';
-            helpMsg = helpMsg + config.prefix + 'purge <2 to 100> - Deletes 2 to 100 messages in channel. (the command is included, no need to sum up!)\n';
+            helpMsg = helpMsg + config.prefix + 'purge <1 to 100> - Deletes 1 to 100 messages in channel. (the command is included, no need to sum up!)\n';
             helpMsg = helpMsg + config.prefix + 'whosdabest - Who is the best?\n';
             helpMsg = helpMsg + config.prefix + 'whosdebest - Who is the best?\n';
             helpMsg = helpMsg + config.prefix + 'whosthebest - Who is the best?\n';
@@ -127,12 +130,35 @@ client.on("message", async message => {
             helpMsg = helpMsg + config.prefix + 'search <query> - Searches in GF database pt the query, then return the first 5 hits. (needs improvements!!!)\n';
             helpMsg = helpMsg + config.prefix + 'isban <query> - Check whether a player is banned or not.\n';
             helpMsg = helpMsg + config.prefix + 'count - Its beta, do not use it.';
+			*/
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'buscaitem <palavra chave / ID> - Busca a palavra chave no GF database e retorna os 5 primeiros resultados da busca ou retorna o link do ID solicitado.\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'buscatitulo <nome do título / ID> - Busca o título por nome ou id (coloque o nome do título exatamente igual).\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'buscamonstro <nome do monstro / ID> - Busca o monstro por nome ou id (coloque o nome do monstro exatamente igual, sem o que está no <>).\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'buscaquest <nome da quest / ID> - Busca a quest por nome ou id (coloque o nome da quest exatamente igual, inclusivel o level como está escrito no jogo.).\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'fale <frase a ser dita> - Faz o bot falar a frase passada no chat onde o comando foi digitado.\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'faleem <frase a ser dita> - Faz o bot falar a frase passada no chat bar_do_babama.\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'ping - Calcula o ping entre o envio e edição de uma mensagem, dá uma boa noção da latência.\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'kick \@vítima <razão (optional)> - Da um kick bem dado em uma pessoa, você pode dizer o motivo do kick. (Apenas administradores)\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'ban \@vítima <razão (optional)> - Da um ban bem dado em uma pessoa, você pode dizer o motivo do ban. (Apenas administradores)\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'purgar <1 a 100> - Deleta entre 1 e 100 mensagens acima, o comando não conta. (Apenas administradores)\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'whosdabest - Quem é o melhor?\n';
+            helpMsg = helpMsg + '۞ ' + config.prefix + 'alpacu - ( ͡° ͜ʖ ͡°)\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'tabanido <nome da conta> - Checa se um jogador está banido no GF-PT. (Apenas admin)\n';
+			helpMsg = helpMsg + '۞ ' + config.prefix + 'talentcombo <classe> - Retorna o combo de talentos da classe pedida.\n';
             helpMsg = helpMsg + '```';
             message.channel.send(helpMsg);
             break;
 
         case 'convitebot':
         case 'invitelink':
+			
+			// This command must be limited to mods and admins. In this example we just hardcode the role names.
+            // Please read on Array.some() to understand this bit: 
+            // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
+            if (!message.member.permissions.has("ADMINISTRATOR")) {
+                return message.reply(lang.noperm);
+            }
+			
             // Aw god... this is self explanatory, if you don't understand it, don't mess my code!!!!!
             message.channel.send(datas.inviteLink);
             break;
@@ -144,23 +170,15 @@ client.on("message", async message => {
             m.edit(lang.pong + (m.createdTimestamp - message.createdTimestamp) + lang.api + Math.round(client.ping) + `ms`);
             break;
 
-        case 'busca':
-        case 'search':
-            // Searches in GF database for input query
-            let commandSearchReq = require(`./database/search.js`);
-
-            // Those nasty users should not prompt empty searches
-            if (args.length === 0) {
-                message.channel.send(lang.nofool);
-                break;
-            }
-
-            // Search the query
-            commandSearchReq.searchGFDB(args.join(' '), message);
-            break;
-
         case 'fale':
         case 'say':
+			// This command must be limited to mods and admins. In this example we just hardcode the role names.
+            // Please read on Array.some() to understand this bit: 
+            // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
+            if (!message.member.permissions.has("ADMINISTRATOR")) {
+                return message.reply(lang.noperm);
+            }
+			
             // makes the bot say something and delete the message. As an example, it's open to anyone to use. 
             // To get the "message" itself we join the `args` back into a string with spaces: 
             const sayMessage = args.join(" ");
@@ -169,8 +187,34 @@ client.on("message", async message => {
             // And we get the bot to say the thing: 
             message.channel.send(sayMessage);
             break;
+		
+		case 'faleem':
+		case 'sayto':
+			// This command must be limited to mods and admins. In this example we just hardcode the role names.
+            // Please read on Array.some() to understand this bit: 
+            // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
+            if (!message.member.permissions.has("ADMINISTRATOR")) {
+                return message.reply(lang.noperm);
+            }
+			
+            // makes the bot say something and delete the message. As an example, it's open to anyone to use. 
+            // To get the "message" itself we join the `args` back into a string with spaces: 
+            const sayMessage2 = args.join(" ");
+            // Then we delete the command message (sneaky, right?). The catch just ignores the error with a cute smiley thing.
+            message.delete().catch(O_o => { });
+			
+			const channel = client.channels.find(x => x.name === 'bar_do_babama');
+			channel.send(sayMessage2);
+            break;
 
         case 'alpacu':
+			// This command must be limited to mods and admins. In this example we just hardcode the role names.
+            // Please read on Array.some() to understand this bit: 
+            // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
+            //if (!message.member.permissions.has("ADMINISTRATOR")) {
+            //    return message.reply(lang.noperm);
+            //}
+			
             // Self explanatory
             message.channel.send("( ͡° ͜ʖ ͡°)", {
                 files: [
@@ -213,47 +257,17 @@ client.on("message", async message => {
             if (!message.member.permissions.has("ADMINISTRATOR")) {
                 return message.reply(lang.noperm);
             }
-
-            // Let's first check if we have a member and if we can kick them!
-            // message.mentions.members is a collection of people that have been mentioned, as GuildMembers.
-            // We can also support getting the member by ID, which would be args[0]
-            let member = message.mentions.members.first() || message.guild.members.get(args[0]);
-
-            // slice(1) removes the first part, which here should be the user mention or ID
-            // join(' ') takes all the various parts to make it a single string.
-            let reason = args.slice(1).join(' ');
-
-            // Check if there is any reason, if not, provide the string "No reason provided"
-            if (!reason) {
-                reason = lang.noreason
+			
+			// Those nasty users should not prompt empty searches
+            if (args.length === 0) {
+                message.channel.send(lang.nofool);
+                break;
             }
 
-            // Check if member exists
-            if (!member) {
-                //return message.reply("Please mention a valid member of this server.");
-                return message.reply(lang.givevalidmember);
-            }
+			let commandDoBan = require(`./database/ban.js`);
 
-            // This diferentiates between kick and ban
-            if (cmd === "kick") {
-                // Check if the member is able to be kicked
-                if (!member.kickable) {
-                    return message.reply(lang.cantkick);
-                }
-
-                // Now, time for a swift kick in the nuts!
-                await member.kick(reason).catch(error => message.reply(lang.sorry + message.author + lang.nokickerr + error));
-                message.reply(member.user.tag + lang.kickby + message.author.tag + lang.punfor + reason);
-
-            } else {
-                // Check if the member is able to be banned
-                if (!member.bannable) {
-                    return message.reply(lang.cantbean);
-                }
-                // BANHAMMER
-                await member.kick(reason).catch(error => message.reply(lang.sorry + message.author + lang.nobeanerr + error));
-                message.reply(member.user.tag + lang.beanby + message.author.tag + lang.punfor + reason);
-            }
+			// Search the query
+            commandDoBan.ban(args, message);
 
             break;
 
@@ -271,7 +285,7 @@ client.on("message", async message => {
             const deleteCount = parseInt(args[0], 10);
 
             // Ooooh nice, combined conditions. <3
-            if (!deleteCount || deleteCount < 2 || deleteCount > 100) {
+            if (!deleteCount || deleteCount < 1 || deleteCount > 100) {
                 return message.reply(lang.givnum);
             }
 
@@ -287,13 +301,14 @@ client.on("message", async message => {
             if (!message.member.permissions.has("ADMINISTRATOR")) {
                 return message.reply(lang.noperm);
             }
-            let commandSearchBan = require(`./database/isban.js`);
-
+            
             // Those nasty users should not prompt empty searches
             if (args.length === 0) {
                 message.channel.send(lang.nofool);
                 break;
             }
+			
+			let commandSearchBan = require(`./database/isban.js`);
 
             // Search the query
             commandSearchBan.isban(args.join(' '), message);
@@ -305,16 +320,28 @@ client.on("message", async message => {
             // Who is the best?
             message.channel.send('DollRanger / [GS]Doll,' + lang.fershure);
             break;
+			
+		case 'thanks':
+		case 'obg':
+			message.channel.send('[GS]Doll, Adamont, [GS]Ready' + lang.fershure);
+            break;
 
         case 'add':
-            // Validate input against JSON array and emit a result or an error
+            // This command must be limited to mods and admins. In this example we just hardcode the role names.
+            // Please read on Array.some() to understand this bit: 
+            // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
+            if (!message.member.permissions.has("ADMINISTRATOR")) {
+                return message.reply(lang.noperm);
+            }
+			
+			// Validate input against JSON array and emit a result or an error
             const validItems = require('./validItems.json');
             if (args.length < 1) {
                 message.channel.send('You didn\'t supply an item');
                 return;
             }
             const item = args.join(' ').toLowerCase();
-            if (!validItems.includes(item)) {
+            if (!validItems.join('+|+').toLowerCase().split('+|+').includes(item)) {
                 message.channel.send('Invalid item');
                 break;
             }
@@ -342,6 +369,13 @@ client.on("message", async message => {
             break;
 
         case 'wipe':
+			// This command must be limited to mods and admins. In this example we just hardcode the role names.
+            // Please read on Array.some() to understand this bit: 
+            // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
+            if (!message.member.permissions.has("ADMINISTRATOR")) {
+                return message.reply(lang.noperm);
+            }
+			
             fs.writeFile('./submissions.json', '[]', (err, res) => {
                 if (err) {
                     console.error(err);
@@ -350,6 +384,133 @@ client.on("message", async message => {
                 message.channel.send('Wiped submissions');
             });
             break;
+		
+		case 'sortition':
+		case 'sorteia':
+			// This command must be limited to mods and admins. In this example we just hardcode the role names.
+            // Please read on Array.some() to understand this bit: 
+            // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some?
+            if (!message.member.permissions.has("ADMINISTRATOR")) {
+                return message.reply(lang.noperm);
+            }
+			
+			let commandSortition = require(`./database/sortition.js`);
+			
+			let len = 50;
+			
+			// Check if its an ID (only numbers)
+			if(Number(args))
+			{
+				len = args <= 100 ? args : 100;
+			}
+			
+			// Search the query
+			commandSortition.sortition(len, message);
+			break;
+		
+		case 'buscaitem':
+        case 'searchitem':
+			// Those nasty users should not prompt empty searches
+            if (args.length === 0) {
+                message.channel.send(lang.nofool);
+                break;
+            }
+			
+			// Check if its an ID (only numbers)
+			if(Number(args))
+			{
+				// Send the link
+				message.channel.send('https://pt.grandfantasia.info/items/' + args);
+			}else{
+				// Searches in GF database for input query
+				let commandSearchReq = require(`./database/search.js`);
+
+				// Search the query
+				commandSearchReq.searchGFDB(args.join(' '), message);
+			}
+            break;
+		
+		case 'buscatitulo':
+		case 'searchtitle':
+			// Those nasty users should not prompt empty searches
+            if (args.length === 0) {
+                message.channel.send(lang.nofool);
+                break;
+            }
+			
+			let commandsearchitem = require(`./database/searchtitle.js`);
+			
+			// Check if its an ID (only numbers)
+			if(Number(args))
+			{
+				// Search the title from ID
+				commandsearchitem.searchitemid(args, message);
+			}else{
+				// Search the title from NAME
+				commandsearchitem.searchitem(args.join(' '), message);
+			}
+			break;
+
+		case 'buscamonstro':
+		case 'searchmonster':
+			// Those nasty users should not prompt empty searches
+            if (args.length === 0) {
+                message.channel.send(lang.nofool);
+                break;
+            }
+			
+			let commandsearchmonster = require(`./database/searchmonster.js`);
+			
+			// Check if its an ID (only numbers)
+			if(Number(args))
+			{
+				// Search the title from ID
+				commandsearchmonster.searchmonsterID(args, message);
+			}else{
+				// Search the title from NAME
+				commandsearchmonster.searchmonster(args.join(' '), message);
+			}
+			break;
+		
+		case 'buscaquest':
+		case 'searchquest':
+			// Those nasty users should not prompt empty searches
+            if (args.length === 0) {
+                message.channel.send(lang.nofool);
+                break;
+            }
+			
+			let commandsearchquest = require(`./database/searchquest.js`);
+			
+			// Check if its an ID (only numbers)
+			if(Number(args))
+			{
+				// Search the title from ID
+				commandsearchquest.searchquestID(args, message);
+			}else{
+				// Search the title from NAME
+				commandsearchquest.searchquest(args.join(' '), message);
+			}
+			break;
+		
+		case 'talentcombo':
+		case 'combodetalento':
+			// Those nasty users should not prompt empty searches
+            if (args.length === 0) {
+                message.channel.send(lang.nofool);
+                break;
+            }
+			let commandtalentcombo = require(`./database/talentcombo.js`);
+			
+			commandtalentcombo.talentcombo(args.join(' '), message);
+			
+			break;
+		
+		case 'teste':
+			let commandalchemy = require(`./database/alchemy.js`);
+			
+			commandalchemy.buildalch(message);
+			break;
     }
 });
 
